@@ -34,6 +34,8 @@ const recipeSlice = createSlice({
 export const getRecipes = (state) => state.recipe.recipes
 export const getRecipe = (state) => state.recipe.recipe
 
+export const getBookmarks = (state) => state.recipe.bookmarks
+
 export const isBookmarked = (state, id) =>
   state.recipe.bookmarks.some((bookmark) => bookmark.id === id)
 
