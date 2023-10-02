@@ -1,21 +1,19 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+
 import "./scss/main.scss"
 
-import SearchForm from "./SearchForm"
-import Navigation from "./Navigation"
-import SearchResults from "./SearchResults"
 import Recipe from "./Recipe"
+import AppLayout from "./AppLayout"
 
 export default function App() {
-
   return (
-    <div className="container">
-      <header className="header">
-        <img src="logo.png" alt="Logo" className="header__logo" />
-        <SearchForm />
-        <Navigation />
-      </header>
-      <SearchResults />
-      <Recipe />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/:id" element={<Recipe />} />
+        </Route>
+        <Route path="/" element={<AppLayout />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
