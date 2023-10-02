@@ -23,6 +23,7 @@ const recipeSlice = createSlice({
 })
 
 export const getRecipes = (state) => state.recipe.recipes
+export const getRecipe = (state) => state.recipe.recipe
 
 export const { setRecipes, setRecipe, setIsLoading } = recipeSlice.actions
 export default recipeSlice.reducer
