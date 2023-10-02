@@ -1,10 +1,12 @@
 import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
-import { setRecipes } from "./features/recipe/recipeSlice"
+import { setRecipes, setIsLoading } from "./features/recipe/recipeSlice"
 
 export default function SearchForm() {
   const [query, setQuery] = useState("")
+
+  const isLoading = useSelector((state) => state.recipe.isLoading)
   const dispatch = useDispatch()
 
   function handleSubmit(event) {
@@ -13,6 +15,7 @@ export default function SearchForm() {
     if (!query) return
 
     async function getRecipes() {
+      dispatch(setIsLoading(true))
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}?search=${query}&key=${
           import.meta.env.VITE_KEY
@@ -21,6 +24,7 @@ export default function SearchForm() {
       const data = await res.json()
 
       dispatch(setRecipes(data.data.recipes))
+      dispatch(setIsLoading(false))
       setQuery("")
     }
 
