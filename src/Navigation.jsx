@@ -1,17 +1,30 @@
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 
-import { getBookmarks, getRecipe } from "./features/recipe/recipeSlice"
+import {
+  getBookmarks,
+  getRecipe,
+  setShowModal,
+} from "./features/recipe/recipeSlice"
 
 export default function Navigation() {
   const bookmarks = useSelector(getBookmarks)
   const recipe = useSelector(getRecipe)
+  // const showModal = useSelector((state) => state.recipe.showModal)
+  const dispatch = useDispatch()
+
+  function handleModal() {
+    dispatch(setShowModal(true))
+  }
 
   return (
     <nav className="nav">
       <ul className="nav__list">
         <li className="nav__item">
-          <button className="nav__btn nav__btn--add-recipe">
+          <button
+            className="nav__btn nav__btn--add-recipe"
+            onClick={handleModal}
+          >
             <svg className="nav__icon">
               <use href="icons.svg#icon-edit"></use>
             </svg>
