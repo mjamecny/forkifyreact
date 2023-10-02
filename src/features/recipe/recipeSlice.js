@@ -5,6 +5,7 @@ const initialState = {
   recipe: {},
   bookmarks: [],
   isLoading: false,
+  showModal: false,
 }
 
 const recipeSlice = createSlice({
@@ -28,6 +29,9 @@ const recipeSlice = createSlice({
     setIsLoading(state, action) {
       state.isLoading = action.payload
     },
+    setShowModal(state, action) {
+      state.showModal = action.payload
+    },
   },
 })
 
@@ -43,6 +47,7 @@ export const {
   setRecipes,
   setRecipe,
   setIsLoading,
+  setShowModal,
   addBookmark,
   removeBookmark,
 } = recipeSlice.actions
