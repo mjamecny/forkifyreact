@@ -20,6 +20,11 @@ const recipeSlice = createSlice({
     addBookmark(state, action) {
       state.bookmarks.push(action.payload)
     },
+    removeBookmark(state, action) {
+      state.bookmarks = state.bookmarks.filter(
+        (bookmark) => bookmark.id !== action.payload
+      )
+    },
     setIsLoading(state, action) {
       state.isLoading = action.payload
     },
@@ -29,6 +34,14 @@ const recipeSlice = createSlice({
 export const getRecipes = (state) => state.recipe.recipes
 export const getRecipe = (state) => state.recipe.recipe
 
-export const { setRecipes, setRecipe, setIsLoading, addBookmark } =
-  recipeSlice.actions
+export const isBookmarked = (state, id) =>
+  state.recipe.bookmarks.some((bookmark) => bookmark.id === id)
+
+export const {
+  setRecipes,
+  setRecipe,
+  setIsLoading,
+  addBookmark,
+  removeBookmark,
+} = recipeSlice.actions
 export default recipeSlice.reducer
