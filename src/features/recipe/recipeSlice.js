@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   recipes: [],
+  isLoading: false,
 }
 
 const recipeSlice = createSlice({
@@ -11,10 +12,13 @@ const recipeSlice = createSlice({
     setRecipes(state, action) {
       state.recipes = action.payload
     },
+    setIsLoading(state, action) {
+      state.isLoading = action.payload
+    },
   },
 })
 
 export const getRecipes = (state) => state.recipe.recipes
 
-export const { setRecipes } = recipeSlice.actions
+export const { setRecipes, setIsLoading } = recipeSlice.actions
 export default recipeSlice.reducer
