@@ -1,10 +1,24 @@
+import { useSelector } from "react-redux"
+
 import SearchResultsItem from "./SearchResultsItem"
+import Spinner from "./Spinner"
+
+import { getRecipes } from "./features/recipe/recipeSlice"
 
 export default function SearchResults() {
+  const recipes = useSelector(getRecipes)
+  const isLoading = useSelector((state) => state.recipe.isLoading)
+
   return (
     <div className="search-results">
       <ul className="results">
-        <SearchResultsItem />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          recipes.map((recipe) => (
+            <SearchResultsItem key={recipe.id} recipe={recipe} />
+          ))
+        )}
       </ul>
       <p className="copyright">
         &copy; Copyright by
