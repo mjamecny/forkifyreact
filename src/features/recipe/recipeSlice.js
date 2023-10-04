@@ -42,6 +42,26 @@ export const uploadRecipe = createAsyncThunk(
   }
 )
 
+export const deleteRecipe = createAsyncThunk(
+  "recipe/deleteRecipe",
+  async function (id) {
+    console.log(id)
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}${id}?key=${import.meta.env.VITE_KEY}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    console.log(res)
+    const data = await res.json()
+    console.log(data)
+    return
+  }
+)
+
 const initialState = {
   recipes: [],
   recipe: {},
@@ -51,6 +71,7 @@ const initialState = {
   statusRecipes: "idle",
   statusRecipe: "idle",
   statusUpload: "idle",
+  statusDelete: "idle",
   error: "",
 }
 
@@ -110,6 +131,17 @@ const recipeSlice = createSlice({
         state.statusUpload = "error"
         state.error =
           "There was a problem uploading the recipe. Please try again later."
+      })
+      .addCase(deleteRecipe.pending, (state) => {
+        state.statusDelete = "loading"
+      })
+      .addCase(deleteRecipe.fulfilled, (state) => {
+        state.statusDelete = "idle"
+      })
+      .addCase(deleteRecipe.rejected, (state) => {
+        state.statusDelete = "error"
+        state.error =
+          "There was a problem deleting the recipe. Please try again later."
       }),
 })
 
