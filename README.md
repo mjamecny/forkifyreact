@@ -7,6 +7,7 @@ Forkify is an application that allows users to search for recipes from forkify A
 - search recipes by query
 - bookmark recipe (saved to browser local storage)
 - upload recipe
+- change servings
 
 ## Screenshot
 
