@@ -10,7 +10,7 @@
     transform-origin: top;
 
     &::before {
-      content: '';
+      content: "";
       display: block;
       height: 100%;
       width: 100%;
@@ -97,6 +97,11 @@
     display: flex;
     margin-left: 1.6rem;
     transform: translateY(-1px);
+  }
+
+  &__delete-btn {
+    display: flex;
+    margin-right: 0.7rem;
   }
 
   &__user-generated {
