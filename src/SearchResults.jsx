@@ -4,6 +4,7 @@ import SearchResultsItem from "./SearchResultsItem"
 import Spinner from "./Spinner"
 import Error from "./Error"
 import Pagination from "./Pagination"
+import Copyright from "./Copyright"
 
 import { getRecipes } from "./features/recipe/recipeSlice"
 
@@ -32,14 +33,7 @@ export default function SearchResults() {
         )}
       </ul>
       <Pagination numPages={numPages} />
-      <p className="copyright">
-        &copy; Copyright by
-        <a className="twitter-link" href="https://twitter.com/jonasschmedtman">
-          Jonas Schmedtmann
-        </a>
-        . Use for learning or your portfolio. Don't use to teach. Don't claim as
-        your own.
-      </p>
+      <Copyright />
     </div>
   )
 }
