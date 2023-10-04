@@ -1,12 +1,13 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 import SearchResultsItem from "./SearchResultsItem"
 import Spinner from "./Spinner"
+import Error from "./Error"
+import Pagination from "./Pagination"
 
-import { getRecipes, setCurrentPage } from "./features/recipe/recipeSlice"
+import { getRecipes } from "./features/recipe/recipeSlice"
 
 export default function SearchResults() {
-  const dispatch = useDispatch()
   const recipes = useSelector(getRecipes)
   const { statusRecipes, currentPage } = useSelector((state) => state.recipe)
   const resPerPage = import.meta.env.VITE_RES_PER_PAGE
@@ -22,58 +23,15 @@ export default function SearchResults() {
       <ul className="results">
         {statusRecipes === "loading" ? (
           <Spinner />
+        ) : recipes.length === 0 ? (
+          <Error msg="No recipes found for your query. Please try again!" />
         ) : (
           recipesSlice.map((recipe) => (
             <SearchResultsItem key={recipe.id} recipe={recipe} />
           ))
         )}
       </ul>
-      <div className="pagination">
-        {currentPage === 1 && numPages > 1 && (
-          <button
-            className="btn--inline pagination__btn--next"
-            onClick={() => dispatch(setCurrentPage(currentPage + 1))}
-          >
-            <span>Page {currentPage + 1}</span>
-            <svg className="search__icon">
-              <use href="icons.svg#icon-arrow-right"></use>
-            </svg>
-          </button>
-        )}
-        {currentPage < numPages && currentPage > 1 && (
-          <>
-            <button
-              className="btn--inline pagination__btn--prev"
-              onClick={() => dispatch(setCurrentPage(currentPage - 1))}
-            >
-              <svg className="search__icon">
-                <use href="icons.svg#icon-arrow-left"></use>
-              </svg>
-              <span>Page {currentPage - 1}</span>
-            </button>
-            <button
-              className="btn--inline pagination__btn--next"
-              onClick={() => dispatch(setCurrentPage(currentPage + 1))}
-            >
-              <span>Page {currentPage + 1}</span>
-              <svg className="search__icon">
-                <use href="icons.svg#icon-arrow-right"></use>
-              </svg>
-            </button>
-          </>
-        )}
-        {currentPage === numPages && numPages > 1 && (
-          <button
-            className="btn--inline pagination__btn--prev"
-            onClick={() => dispatch(setCurrentPage(currentPage - 1))}
-          >
-            <svg className="search__icon">
-              <use href="icons.svg#icon-arrow-left"></use>
-            </svg>
-            <span>Page {currentPage - 1}</span>
-          </button>
-        )}
-      </div>
+      <Pagination numPages={numPages} />
       <p className="copyright">
         &copy; Copyright by
         <a className="twitter-link" href="https://twitter.com/jonasschmedtman">
