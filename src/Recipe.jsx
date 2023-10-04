@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Fraction from "fraction.js"
@@ -11,11 +11,14 @@ import {
   removeBookmark,
   isBookmarked,
   fetchRecipe,
+  deleteRecipe,
 } from "./features/recipe/recipeSlice"
+import Error from "./Error"
 
 export default function Recipe() {
   const { id } = useParams()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const recipe = useSelector(getRecipe)
   const {
     id: recipeId,
@@ -27,7 +30,7 @@ export default function Recipe() {
     source_url,
     ingredients,
   } = recipe
-  const statusRecipe = useSelector((state) => state.recipe.statusRecipe)
+  const { statusRecipe, error } = useSelector((state) => state.recipe)
   const bookmarked = useSelector((state) => isBookmarked(state, recipeId))
 
   const [servingsCount, setServingsCount] = useState(null)
@@ -45,6 +48,12 @@ export default function Recipe() {
     else dispatch(removeBookmark(id))
   }
 
+  function handleDelete() {
+    dispatch(deleteRecipe(id))
+    dispatch(removeBookmark(id))
+    navigate("/")
+  }
+
   function handleDecreaseServings() {
     if (servingsCount === 1) return
     setServingsCount(servingsCount - 1)
@@ -57,6 +66,8 @@ export default function Recipe() {
     <div className="recipe">
       {statusRecipe === "loading" ? (
         <Spinner />
+      ) : statusRecipe === "error" ? (
+        <Error msg={error} />
       ) : (
         <>
           <figure className="recipe__fig">
@@ -104,7 +115,15 @@ export default function Recipe() {
                 </button>
               </div>
             </div>
-
+            <div
+              className={`recipe__delete-btn ${
+                recipe.hasOwnProperty("key") ? "" : "hidden"
+              }`}
+            >
+              <button className="btn--delete" onClick={handleDelete}>
+                Delete
+              </button>
+            </div>
             <div
               className={`recipe__user-generated ${
                 recipe.hasOwnProperty("key") ? "" : "hidden"
@@ -140,7 +159,7 @@ export default function Recipe() {
                       {finQuantityFraction.toFraction()}
                     </div>
                     <div className="recipe__description">
-                      <span className="recipe__unit">{ingredient.unit}</span>
+                      <span className="recipe__unit">{ingredient.unit}</span>{" "}
                       {ingredient.description}
                     </div>
                   </li>
