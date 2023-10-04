@@ -45,7 +45,7 @@ export const uploadRecipe = createAsyncThunk(
 const initialState = {
   recipes: [],
   recipe: {},
-  bookmarks: [],
+  bookmarks: JSON.parse(localStorage.getItem("bookmarks")) || [],
   currentPage: 1,
   showModal: false,
   statusRecipes: "idle",
@@ -112,6 +112,15 @@ const recipeSlice = createSlice({
           "There was a problem uploading the recipe. Please try again later."
       }),
 })
+
+export const saveBookmarksToLocalStorage = (state) => (next) => (action) => {
+  const result = next(action)
+
+  const bookmarks = state.getState().recipe.bookmarks
+  localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
+
+  return result
+}
 
 export const getRecipes = (state) => state.recipe.recipes
 export const getRecipe = (state) => state.recipe.recipe
