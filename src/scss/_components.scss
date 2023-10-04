@@ -119,6 +119,21 @@
   }
 }
 
+.btn--delete {
+  border: none;
+  background-image: $gradient;
+  color: #fff;
+  padding: 1.2rem 1.2rem;
+  border-radius: 10rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+
+  &:hover {
+    transform: scale(1.07);
+  }
+}
+
 .btn--tiny {
   height: 2rem;
   width: 2rem;
