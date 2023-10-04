@@ -1,8 +1,13 @@
-# React + Vite
+# Forkify (React version)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Forkify is an application that allows users to search for recipes from forkify API, bookmark their favorite recipes, and even create their own recipes and upload it. Original project is from Jonas Schmedtmann which is part of his course. This version is built with React.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- search recipes by query
+- bookmark recipe (saved to browser local storage)
+- upload recipe
+
+## Screenshot
+
+![frontpage](https://i.imgur.com/wmDuulA.png)
