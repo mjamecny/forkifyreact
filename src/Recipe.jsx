@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import Fraction from "fraction.js"
 
 import Spinner from "./Spinner"
 
 import {
   getRecipe,
-  setIsLoading,
-  setRecipe,
   addBookmark,
   removeBookmark,
   isBookmarked,
+  fetchRecipe,
 } from "./features/recipe/recipeSlice"
 
 export default function Recipe() {
@@ -27,32 +27,35 @@ export default function Recipe() {
     source_url,
     ingredients,
   } = recipe
-  const isLoading = useSelector((state) => state.recipe.isLoading)
+  const statusRecipe = useSelector((state) => state.recipe.statusRecipe)
   const bookmarked = useSelector((state) => isBookmarked(state, recipeId))
-  // console.log(bookmarked)
+
+  const [servingsCount, setServingsCount] = useState(null)
 
   useEffect(() => {
-    async function getRecipe() {
-      dispatch(setIsLoading(true))
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}${id}?key=${import.meta.env.VITE_KEY}`
-      )
-      const data = await res.json()
-      dispatch(setRecipe(data.data.recipe))
-      dispatch(setIsLoading(false))
-    }
-
-    getRecipe()
+    dispatch(fetchRecipe(id))
   }, [id, dispatch])
+
+  useEffect(() => {
+    if (servings) setServingsCount(servings)
+  }, [servings])
 
   function handleBookmark() {
     if (!bookmarked) dispatch(addBookmark(recipe))
     else dispatch(removeBookmark(id))
   }
 
+  function handleDecreaseServings() {
+    if (servingsCount === 1) return
+    setServingsCount(servingsCount - 1)
+  }
+  function handleIncreaseServings() {
+    setServingsCount(servingsCount + 1)
+  }
+
   return (
     <div className="recipe">
-      {isLoading ? (
+      {statusRecipe === "loading" ? (
         <Spinner />
       ) : (
         <>
@@ -78,17 +81,23 @@ export default function Recipe() {
                 <use href="icons.svg#icon-users"></use>
               </svg>
               <span className="recipe__info-data recipe__info-data--people">
-                {servings}
+                {servingsCount}
               </span>
               <span className="recipe__info-text">servings</span>
 
               <div className="recipe__info-buttons">
-                <button className="btn--tiny btn--increase-servings">
+                <button
+                  className="btn--tiny btn--increase-servings"
+                  onClick={handleDecreaseServings}
+                >
                   <svg>
                     <use href="icons.svg#icon-minus-circle"></use>
                   </svg>
                 </button>
-                <button className="btn--tiny btn--increase-servings">
+                <button
+                  className="btn--tiny btn--increase-servings"
+                  onClick={handleIncreaseServings}
+                >
                   <svg>
                     <use href="icons.svg#icon-plus-circle"></use>
                   </svg>
@@ -117,25 +126,33 @@ export default function Recipe() {
           <div className="recipe__ingredients">
             <h2 className="heading--2">Recipe ingredients</h2>
             <ul className="recipe__ingredient-list">
-              {ingredients?.map((ingredient, i) => (
-                <li key={i} className="recipe__ingredient">
-                  <svg className="recipe__icon">
-                    <use href="icons.svg#icon-check"></use>
-                  </svg>
-                  <div className="recipe__quantity">{ingredient.quantity}</div>
-                  <div className="recipe__description">
-                    <span className="recipe__unit">{ingredient.unit}</span>
-                    {ingredient.description}
-                  </div>
-                </li>
-              ))}
+              {ingredients?.map((ingredient, i) => {
+                const { quantity } = ingredient
+                const finQuantity = quantity * (servingsCount / servings)
+                const finQuantityFraction = new Fraction(finQuantity)
+
+                return (
+                  <li key={i} className="recipe__ingredient">
+                    <svg className="recipe__icon">
+                      <use href="icons.svg#icon-check"></use>
+                    </svg>
+                    <div className="recipe__quantity">
+                      {finQuantityFraction.toFraction()}
+                    </div>
+                    <div className="recipe__description">
+                      <span className="recipe__unit">{ingredient.unit}</span>
+                      {ingredient.description}
+                    </div>
+                  </li>
+                )
+              })}
             </ul>
           </div>
 
           <div className="recipe__directions">
             <h2 className="heading--2">How to cook it</h2>
             <p className="recipe__directions-text">
-              This recipe was carefully designed and tested by
+              This recipe was carefully designed and tested by{" "}
               <span className="recipe__publisher">{publisher}</span>. Please
               check out directions at their website.
             </p>
